@@ -1,0 +1,49 @@
+SELECT DISTINCT IConstruye.dbo.RAZONSOCIAL.RAZONSOCIAL
+	,LOB_OBRA_V.obra_cod
+	,LOB_OBRA_V.emp_cod
+	,IConstruye.dbo.SUBCONTRATOS.NUMDOC
+	,IConstruye.dbo.SUBCONTRATOS.RUTORGV
+	,IConstruye.dbo.SUBCONTCONSOLIDADO.EMPVRAZONSOCIAL
+	,IConstruye.dbo.SUBCONTRATOS.NOMDOC
+	,IConstruye.dbo.SUBCONTRATOS.NUMSUBCONT
+	,IConstruye_dbo_ESTADOSDOC2.DESCRIPCION
+	,IConstruye.dbo.SUBCONTRATOS.MONTONETOPAGORETENCION * IConstruye.dbo.SUBCONTRATOS.TASACAMBIO AS MNPAGORETENCION
+	,IConstruye.dbo.SUBCONTRATOS.MONTONETORETENCIONDEV * IConstruye.dbo.SUBCONTRATOS.TASACAMBIO AS MNRETENCIONDEV
+	,LEFT(CONVERT(varchar,convert(DATE, IConstruye.dbo.ESTADOPAGO.FECHACREACION, 111),112),6) AS periodo
+INTO #TEMP
+FROM IConstruye.dbo.RAZONSOCIAL
+INNER JOIN IConstruye.dbo.SUBCONTRATOS ON (IConstruye.dbo.RAZONSOCIAL.RUT = IConstruye.dbo.SUBCONTRATOS.RUTC)
+INNER JOIN IConstruye.dbo.ORGC ON (IConstruye.dbo.ORGC.IDORGC = IConstruye.dbo.SUBCONTRATOS.IDORGC)
+INNER JOIN (
+	SELECT b.*
+	FROM Iconstruye.dbo.ORGC a
+		,BxO_DATA.dbo.LOB_OBRA_V b
+	WHERE a.codigo = b.obra_cod
+	) LOB_OBRA_V ON (IConstruye.dbo.ORGC.CODIGO = LOB_OBRA_V.obra_cod)
+INNER JOIN IConstruye.dbo.ESTADOSDOC IConstruye_dbo_ESTADOSDOC2 ON (IConstruye_dbo_ESTADOSDOC2.IDESTADODOC = IConstruye.dbo.SUBCONTRATOS.IDESTADODOC)
+INNER JOIN IConstruye.dbo.ESTADOPAGO ON (IConstruye.dbo.ESTADOPAGO.IDSUBCONTRATO = IConstruye.dbo.SUBCONTRATOS.IDDOC)
+INNER JOIN IConstruye.dbo.ESTADOSDOC ON (IConstruye.dbo.ESTADOSDOC.IDESTADODOC = IConstruye.dbo.ESTADOPAGO.IDESTADODOC)
+RIGHT OUTER JOIN IConstruye.dbo.SUBCONTCONSOLIDADO ON (IConstruye.dbo.SUBCONTRATOS.IDDOCORIGEN = IConstruye.dbo.SUBCONTCONSOLIDADO.IDDOC)
+WHERE (
+		LOB_OBRA_V.emp_cod IN (
+			'0201'
+			,'0202'
+			,'0206'
+			)
+		AND IConstruye.dbo.ESTADOSDOC.DESCRIPCIONC IN (
+			'EstadoPago Aprobado '
+			,'EstadoPago Asociado Factura '
+			,'EstadoPago Espera Aprobacion '
+			,'EstadoPago Pagado'
+			,'EstadoPago PorAsociar '
+			,'En Proceso de Pago'
+			)
+		AND convert(DATE, IConstruye.dbo.ESTADOPAGO.FECHACREACION, 111) <= '2020-01-31'
+		--AND
+		--LOB_OBRA_V.obra_status  =  1
+		AND (IConstruye.dbo.SUBCONTRATOS.MONTONETOPAGORETENCION * IConstruye.dbo.SUBCONTRATOS.TASACAMBIO) - (IConstruye.dbo.SUBCONTRATOS.MONTONETORETENCIONDEV * IConstruye.dbo.SUBCONTRATOS.TASACAMBIO) <> 0
+		)
+
+		SELECT * FROM BO_Calculo_Provisiones A
+		INNER JOIN #TEMP B ON A.CpnyID = B.emp_cod AND A.obra_cod = B.obra_cod and A.Periodo = B.periodo
+		drop table #TEMP
