@@ -5,9 +5,6 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{870FCF66-E393-4F54-B451-75C7AB3B3076}"
 	ProjectSection(SolutionItems) = preProject
-		ALTER_PROCEDURE_BxO_Calculo_Provisiones.sql = ALTER_PROCEDURE_BxO_Calculo_Provisiones.sql
-		ALTER_TABLE_BO_Calculo_Provisiones.SQL = ALTER_TABLE_BO_Calculo_Provisiones.SQL
-		CREATE_PROCEDURE_BxO_Calculo_Costo_Provisiones.sql = CREATE_PROCEDURE_BxO_Calculo_Costo_Provisiones.sql
 		prov-ep.sql = prov-ep.sql
 		proviciones_ep_borrador.sql = proviciones_ep_borrador.sql
 		query_provisiones.sql = query_provisiones.sql
@@ -15,12 +12,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		retenciones.sql = retenciones.sql
 	EndProjectSection
 EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "SP_CostosProvisiones", "SP_CostosProvisiones\SP_CostosProvisiones.ssmssqlproj", "{A7CE08F2-8A08-45D6-BAC9-40BDBC34714E}"
+EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "Tbl_CostosProvisiones", "Tbl_CostosProvisiones\Tbl_CostosProvisiones.ssmssqlproj", "{69364CA2-38C7-400F-931C-597C5F0FA0C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Default|Default = Default|Default
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{97F96C46-60A2-4703-B380-4F1316905033}.Default|Default.ActiveCfg = Default
+		{A7CE08F2-8A08-45D6-BAC9-40BDBC34714E}.Default|Default.ActiveCfg = Default
+		{69364CA2-38C7-400F-931C-597C5F0FA0C2}.Default|Default.ActiveCfg = Default
+		{FE1B7760-FE98-4098-B0D0-FFE2274881F9}.Default|Default.ActiveCfg = Default
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
